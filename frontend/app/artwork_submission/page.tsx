@@ -16,6 +16,9 @@ type TArtwork = {
   caption: string;
 };
 
+const BACKEND_URL =
+  process.env.NEXT_PUBLIC_BACKEND_URL || "http://127.0.0.1:8000";
+
 export default function ArtworkSubmission() {
   const { register, handleSubmit } = useForm<TArtwork>();
   const [image, setImage] = useState<File | null>(null);
@@ -29,7 +32,7 @@ export default function ArtworkSubmission() {
     for (const [key, value] of Object.entries(data)) {
       formData.append(key, value);
     }
-    const url = "http://localhost:8000/api/artwork/";
+    const url = `${BACKEND_URL}/api/artwork/`;
     const res = await fetch(url, {
       // headers: {
       //   "Content-Type": "application/json",

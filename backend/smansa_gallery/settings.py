@@ -3,6 +3,7 @@ import os
 from dotenv import load_dotenv
 from django.urls import reverse_lazy
 from django.utils.translation import gettext_lazy as _
+import dj_database_url
 
 load_dotenv()
 import random
@@ -19,9 +20,9 @@ SECRET_KEY = os.getenv(
 )
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = bool(int(os.getenv("DJANGO_DEBUG", 0)))
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = os.getenv("DJANGO_ALLOWED_HOSTS", "localhost").split(",")
 
 # CORS_ALLOWED_ORIGINS = ["http://localhost:3000"]
 
@@ -29,7 +30,9 @@ CORS_ALLOW_ALL_ORIGINS = True
 
 CORS_ALLOW_CREDENTIALS = True
 
-CSRF_TRUSTED_ORIGINS = ["http://localhost:3000"]
+CSRF_TRUSTED_ORIGINS = os.getenv(
+    "DJANGO_CORS_ALLOWED_ORIGINS", "http://localhost:3000"
+).split(",")
 
 # Application definition
 
@@ -52,6 +55,7 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     "corsheaders.middleware.CorsMiddleware",
     "django.middleware.security.SecurityMiddleware",
+    "whitenoise.middleware.WhiteNoiseMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
@@ -105,6 +109,9 @@ DATABASES = {
         "ENGINE": "django.db.backends.sqlite3",
         "NAME": BASE_DIR / "db.sqlite3",
     }
+    # "default": dj_database_url.config(
+    #     default=os.getenv("DATABASE_URL"), conn_max_age=600
+    # )
 }
 
 
@@ -142,7 +149,11 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
 
-STATIC_URL = "static/"
+STATIC_URL = "/static/"
+
+if not DEBUG:
+    STATIC_ROOT = BASE_DIR / "staticfiles"
+    STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
 # Media files (user-uploaded files)
 MEDIA_URL = "/media/"

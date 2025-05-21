@@ -46,7 +46,7 @@ export default function Gallery() {
       </div>
       <div className="flex gap-8">
         {/* Column 1 */}
-        <div className="flex flex-col gap-8">
+        <div className="w-1/3 flex flex-col gap-8">
           {artworks.slice(0, Math.ceil(artworks.length / 3)).map((artwork) => (
             <Artwork
               key={artwork.id}
@@ -58,7 +58,7 @@ export default function Gallery() {
           ))}
         </div>
         {/* Column 2 */}
-        <div className="flex flex-col gap-8">
+        <div className="w-1/3 flex flex-col gap-8">
           {artworks
             .slice(
               Math.ceil(artworks.length / 3),
@@ -75,7 +75,7 @@ export default function Gallery() {
             ))}
         </div>
         {/* Column 3 */}
-        <div className="flex flex-col gap-8">
+        <div className="w-1/3 flex flex-col gap-8">
           {artworks
             .slice(Math.ceil((artworks.length * 2) / 3), artworks.length)
             .map((artwork) => (
@@ -110,6 +110,7 @@ function Artwork({
   image: string;
   viewArtwork: () => void;
 }) {
+  console.log(image);
   return (
     <div
       className="cursor-pointer w-full rounded-2xl relative flex flex-col gap-4 overflow-hidden"
